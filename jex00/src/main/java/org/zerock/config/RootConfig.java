@@ -2,6 +2,8 @@ package org.zerock.config;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,7 @@ import com.zaxxer.hikari.HikariDataSource;
 // 지정된 패키지 속 클래스들을 모두 스캔 후 관리 대상들을 관리한다. 
 @ComponentScan(basePackages= {"org.zerock.sample"})
 public class RootConfig {
-	// 
+	// HikariCP 이용하기 위한 java로 bean 등록
 	@Bean
 	public DataSource dataSource() {
 		HikariConfig hikariConfig = new HikariConfig();
@@ -31,5 +33,15 @@ public class RootConfig {
 		
 		return dataSource;
 		}
+	
+	// Mybatis java설정으로 빈 등록
+	@Bean
+	public SqlSessionFactory sqlSessionFactory() throws Exception{
+		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+		sqlSessionFactory.setDataSource(dataSource());
+		return (SqlSessionFactory)sqlSessionFactory.getObject();
+		
+	}
+	
 
 }
