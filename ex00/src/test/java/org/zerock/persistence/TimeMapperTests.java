@@ -34,6 +34,7 @@ public class TimeMapperTests {
 		log.info(timeMapper.getTime());
 	}
 	
+	// 테스트
 	@Test
 	public void testGetTime2() {
 		// 실제 동작하는 클래스의 이름을 확인
