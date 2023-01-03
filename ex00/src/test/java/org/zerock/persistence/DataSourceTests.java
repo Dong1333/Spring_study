@@ -33,12 +33,11 @@ public class DataSourceTests {
 	@Setter(onMethod_ = { @Autowired })
 		private DataSource dataSource;
 		
-	@Setter(onMethod_ = { @Autowired })
-	private SqlSessionFactory sqlSessionFactory;
 	
 //	// HikiraCP 테스트
 //	@Test
 //		public void testConnection() {
+			// dataSource정보로 Connection 객체를 생성하고 로그를 출력
 //			try (Connection con = dataSource.getConnection()){
 //				log.info(con);
 //			} catch (Exception e) {
@@ -46,8 +45,14 @@ public class DataSourceTests {
 //			}
 //		}
 //	
+	
+	@Setter(onMethod_ = { @Autowired })
+	private SqlSessionFactory sqlSessionFactory;
+	
 	// Mybatis Test
 	@Test
+	//	자동주입 받은 sqlSessionFactory 객체로 SQLSession을 내부적으로 만든다
+	// 이후 session은 생성한 Connection을 받아와 Connection객체 생성 후 테스트를 진행한다.
 		public void testMyBatis() {
 			try (SqlSession session  = sqlSessionFactory.openSession();
 					Connection con = session.getConnection();

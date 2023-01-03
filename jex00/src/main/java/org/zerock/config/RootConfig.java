@@ -24,8 +24,10 @@ public class RootConfig {
 	// HikariCP 이용하기 위한 java로 bean 등록
 	@Bean
 	public DataSource dataSource() {
+		// HikariConfig 객체 생성
 		HikariConfig hikariConfig = new HikariConfig();
 		
+		// 	HikariConfig객체에 DB 드라이버, 주소(파라미터 값 포함) 을 저장한다.
 //		hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
 //		hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/firstDB?useSSL=false");
 		
@@ -33,10 +35,11 @@ public class RootConfig {
 		hikariConfig.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
 		hikariConfig.setJdbcUrl("jdbc:log4jdbc:mysql://localhost:3306/firstDB?useSSL=false");
 		
+		// HikariConfig 객체에 사용자 정보를 저장해 준다.
 		hikariConfig.setUsername("root");
 		hikariConfig.setPassword("12341234");
 		
-		
+		// HikariDataSource 객체를 생성하고 위에 세팅했던 정보가 담긴 hikariConfig를 전달해 준다.
 		HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 		
 		return dataSource;
