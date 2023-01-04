@@ -1,18 +1,20 @@
 package org.zerock.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.SampleDTO;
 import org.zerock.domain.SampleDTOList;
 import org.zerock.domain.TodoDTO;
@@ -121,14 +123,55 @@ public class SampleController {
 		return "/sample/ex04";
 	}
 	
-	// Controller의 리턴 타입이 void일 경우(예제) 
+	// Controller의 리턴 타입이 'void'일 경우(예제) 
 	@GetMapping("/ex05")
 	public void ex05(){
 		
 		log.info("/ex05.........");
 	}
+	
+	// 리턴 타입이 '객체'일 경우(예제) 
+	@GetMapping("/ex06")
+	public @ResponseBody SampleDTO ex06(){
+		
+		log.info("/ex06.........");
+		SampleDTO dto = new SampleDTO();
+		dto.setAge(10);
+		dto.setName("홍길동");
+		
+		return dto;
+	}
+	
+	// 리턴 타입이 HTTP 헤더를 다루는 ResponseEntity 타입일 경우(예제) 
+	@GetMapping("/ex07")
+	public ResponseEntity<String> ex07(){
+		
+		log.info("/ex07........");
+		
+		// {"name" : "홍길동"}
+		String msg =  "{\"name\" : \"홍길동\"}";
+		
+		HttpHeaders header = new HttpHeaders();
+		header.add("Content-Type", "application/json;charset=UTF-8");
+		
+		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+	}
+	
+	// 파일 업로드 실습 (파일 업로드 jsp 화면만 구성)
+	@GetMapping("/exUpload")
+	public void exUpload() {
+		log.info("/exUpload........");
+	}
+	
+	// 파일 업로드 실습 (파일 업로드 기능도 구현)
+	@PostMapping("/exUploadPost")
+	public void exUploadPost(ArrayList<MultipartFile> files) {
+		
+		files.forEach(file -> {
+			log.info("----------------------");
+			log.info("name : " + file.getOriginalFilename());
+			log.info("size : " + file.getSize());
+		});
+	}
 }
-
-
-
 
