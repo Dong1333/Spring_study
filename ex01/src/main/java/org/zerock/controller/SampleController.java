@@ -120,6 +120,13 @@ public class SampleController {
 		
 		return "/sample/ex04";
 	}
+	
+	// Controller의 리턴 타입이 void일 경우(예제) 
+	@GetMapping("/ex05")
+	public void ex05(){
+		
+		log.info("/ex05.........");
+	}
 }
 
 
