@@ -67,7 +67,7 @@ public class BoardMapperTests {
 	@Test
 	public void testDelete() {
 	
-		log.info("DELETE COUNT : "+mapper.delete(3L));
+		log.info("DELETE COUNT : "+ mapper.delete(3L));
 	}
 	
 	// BoardMapper의 testUpdate()의 테스트 코드
