@@ -39,7 +39,7 @@ public class BoardControllerTests {
 	// Controller를 실행해 볼 수 있다
 	private MockMvc mockMvc;
 	
-	// 모든 테스트 시작 전 실행
+	// 모든 테스트 시작 전 실행할 코드 
 	@Before
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
