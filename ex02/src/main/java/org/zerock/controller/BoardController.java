@@ -3,7 +3,11 @@ package org.zerock.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.domain.BoardVO;
 import org.zerock.service.BoardService;
 
 import lombok.AllArgsConstructor;
@@ -23,12 +27,66 @@ public class BoardController {
 
 	private BoardService service;
 	
-	// 나중에 게시물의 목록을 전달해야 하므로 Model을 파리미터로 지정
+	// 게시물의 목록을 전달해야 하므로 Model을 파리미터로 지정
 	@GetMapping("/list")
 	public void list(Model model) {
 		
 		// 이를 통해서 BoardServiceImpl 객체의 getList() 결과를 담아 전달한다.
 		log.info("list");
 		model.addAttribute("list", service.getList());
+	}
+	
+	// 등록 작업이 끝나면 다시 목록화면으로 이동하는 메소드
+	//  String을 리턴 타입으로 지정하고 RedirectAttributes를 파라미터로 지정
+	// 추가적으로 새롭게 등록된 게시물의 번호를 같이 전달하기 위해서 RedirectAttributes 사용 
+	@PostMapping("/register")
+	public String register(BoardVO board, RedirectAttributes rttr) {
+
+		log.info("register: " + board);
+
+		service.register(board);
+
+		rttr.addFlashAttribute("result", board.getBno());
+		
+		// 스프링 MVC가 내부적으로 response.sendRedirect()를 처리
+		return "redirect:/board/list";
+	}
+	
+	// 특정한 게시물을 가져오는 메소드
+	// bno 값을 좀 더 명시적으로 처리하는 *@RequestParam을 이용해서 지정
+	@GetMapping("/get")
+	public void get(@RequestParam("bno") Long bno, Model model) {
+		
+		log.info("/get");
+		model.addAttribute("board", service.get(bno));
+	}
+	
+	// 수정 / 변경된 내용을 수집해서 BoardVO 파라미터로 처리하고, BoardService를 호출
+	@PostMapping("/modify")
+	public String modify(BoardVO board, RedirectAttributes rttr) {
+
+		log.info("modify: " + board);
+
+		// service.modify()는 boolean으로 처리한다.
+		// 따라서 성공한 경우에만 RedirectAtrributes에 추가
+		if(service.modify(board)) {
+			rttr.addFlashAttribute("result", "success");
+		}
+		// 스프링 MVC가 내부적으로 response.sendRedirect()를 처리
+		return "redirect:/board/list";
+	}
+	
+	
+	// 삭제
+	// bno 값을 좀 더 명시적으로 처리하는 *@RequestParam을 이용해서 지정
+	// 삭제 후 페이지의 이동이 필요하여 RedirectAttributes를 파라미터로 사용
+	@PostMapping("/remove")
+	public String remove(@RequestParam("bno") Long bno, RedirectAttributes rttr) {
+		log.info("remove...." + bno);
+		if (service.remove(bno)) {
+			rttr.addFlashAttribute("result", "success");
+		}
+		
+		return "redirect:/board/list";
 	}
 }
