@@ -18,6 +18,7 @@ import lombok.extern.log4j.Log4j;
 @RunWith(SpringJUnit4ClassRunner.class)
 
 // ServletContext를 이용하기 위해서 사용
+// WebApplicationContext는 MockMvc객체 를 빌드하는 데 사용 되기 때문
 @WebAppConfiguration
 @ContextConfiguration({
 	"file:src/main/webapp/WEB-INF/spring/root-context.xml",

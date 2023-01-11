@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 // BoardMapper 인터페이스를 테스트 할 수 있는 테스트 클래스 작성
+// 인터페이스 이지만 아래 의존성 주입을 통하여 구현객체를 생성하여 테스트 할 수 있다.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j

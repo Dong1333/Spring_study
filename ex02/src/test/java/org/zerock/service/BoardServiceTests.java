@@ -19,7 +19,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class BoardServiceTests {
 	
-	// BoardService 객체생성 후 주입이 
+	// BoardService 객체생성 후 주입 
 	@Setter(onMethod_= {@Autowired})
 	private BoardService service;
 	
@@ -31,7 +31,7 @@ public class BoardServiceTests {
 		assertNotNull(service);
 	}
  
-	// BoardServiceImpl에 register()를 테스트 하는 코드 
+	// BoardServiceImple에 register()를 테스트 하는 코드 
 	@Test
 	public void testRegister() {
 		// BoardVO 객체 생성 후 값 저장

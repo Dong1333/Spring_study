@@ -24,7 +24,9 @@ import lombok.extern.log4j.Log4j;
 // @AllArgsConstructor를 이용해 생성자를 만들고 자동으로 주입하도록 한다
 @AllArgsConstructor
 public class BoardController {
-
+	
+	// BoardService 대한 객체 생성
+	// 즉 service로 BoardService 메소드를 사용할 수 있음
 	private BoardService service;
 	
 	// 게시물의 목록을 전달해야 하므로 Model을 파리미터로 지정
