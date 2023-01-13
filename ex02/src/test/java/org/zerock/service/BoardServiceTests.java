@@ -13,6 +13,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+// 이 테스트 코드 실행시 컨텍스트가 어떤 설정파일들을 읽어야 하는지 지정
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 // java 설정의 경우
 // @ContextConfiguration(classes = {org.zerock.congig.RootConfig.class})

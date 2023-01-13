@@ -11,7 +11,7 @@ import lombok.Setter;
 @Component
 @Data
 public class Restaurant {
-
+	// @Autowired > 나 셰프가 필요해
 	@Setter(onMethod_ = @Autowired)
 	private Chef chef;
 }
