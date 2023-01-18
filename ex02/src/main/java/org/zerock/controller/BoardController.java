@@ -38,10 +38,7 @@ public class BoardController {
 		model.addAttribute("list", service.getList());
 	}
 	
-	// 등록 작업이 끝나면 다시 목록화면으로 이동하는 메소드
-	//  String을 리턴 타입으로 지정하고 RedirectAttributes를 파라미터로 지정
-	// 추가적으로 새롭게 등록된 게시물의 번호를 같이 전달하기 위해서 RedirectAttributes 사용 
-	@PostMapping("/register")
+	@GetMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
 
 		log.info("register: " + board);
@@ -53,6 +50,14 @@ public class BoardController {
 		// 스프링 MVC가 내부적으로 response.sendRedirect()를 처리
 		return "redirect:/board/list";
 	}
+	
+	// 등록 작업이 끝나면 다시 목록화면으로 이동하는 메소드
+	@PostMapping("/register")
+	public void register() {
+
+	}
+	
+	
 	
 	// 특정한 게시물을 가져오는 메소드
 	// bno 값을 좀 더 명시적으로 처리하는 *@RequestParam을 이용해서 지정
