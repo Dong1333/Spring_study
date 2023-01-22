@@ -37,6 +37,7 @@
 	</insert>
 
 	<insert id="insertSelectKey">
+	
 
 		<selectKey keyProperty="bno" order="BEFORE"
 			resultType="long">
