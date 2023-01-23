@@ -34,6 +34,7 @@
 		insert into tbl_board (bno,title,content,writer)
 		values (seq_board.nextval, #{title}, #{content}, #{writer})
 	</insert>
+	
 
 	<insert id="insertSelectKey">
 	
