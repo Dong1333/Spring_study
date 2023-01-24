@@ -37,8 +37,6 @@
 	
 
 	<insert id="insertSelectKey">
-	
-
 		<selectKey keyProperty="bno" order="BEFORE"
 			resultType="long">
 			select seq_board.nextval from dual
