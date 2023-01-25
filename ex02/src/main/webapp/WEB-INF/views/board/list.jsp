@@ -13,12 +13,15 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            DataTables Advanced Tables
-                        </div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Board List Page
+							<button id='regBtn' type="button" class="btn btn-xs pull-right">Register
+								New Board</button>
+						</div>
+
                         <!-- /.panel-heading -->
                         <div class="panel-body">				
                         <table class="table table-striped table-bordered table-hover">
@@ -58,5 +61,64 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+            
+            			<!-- Modal  추가 -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+						</div>
+						<div class="modal-body">처리가 완료되었습니다.</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save
+								changes</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+            
+            
+<script type="text/javascript">
+$(document).ready(function() {
+
+	var result = '<c:out value="${result}"/>';
+
+	checkModal(result);
+
+	// 체크모달 함수
+	function checkModal(result) {
+		// 만약 공백이면 그냥 종료
+		if (result === '' || history.state) {
+			return;
+		}
+	
+		// result를 숫자로 변형 후 0보다 크면
+		if (parseInt(result) > 0) {
+			// 결과 보여주기
+			$(".modal-body").html( "게시글 " + parseInt(result)
+							+ " 번이 등록되었습니다.");
+		}
+		// div 속 id와 일치한 모달에 보여주기
+		$("#myModal").modal("show");
+	}
+		// Register New Board 버튼 클릭시 동작 함수
+		$("#regBtn").on("click", function() {
+		
+		// 현재 윈도우(self)에 "/board/register"로 이동해
+		self.location = "/board/register";
+
+		});
+	});
+</script>
+            
       
             <%@include file="../includes/footer.jsp"%>
