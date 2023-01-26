@@ -93,9 +93,13 @@ $(document).ready(function() {
 	var result = '<c:out value="${result}"/>';
 
 	checkModal(result);
-
+	
+	// window.history 속 데이터 지우기 (모달창, 다운로드 등의 쌓임 방지)
+	 
+	
 	// 체크모달 함수
 	function checkModal(result) {
+		
 		// 만약 공백이면 그냥 종료
 		if (result === '' || history.state) {
 			return;

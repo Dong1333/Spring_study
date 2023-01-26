@@ -61,10 +61,12 @@ public class BoardController {
 	
 	// 특정한 게시물을 가져오는 메소드
 	// bno 값을 좀 더 명시적으로 처리하는 *@RequestParam을 이용해서 지정
-	@GetMapping("/get")
+	// 요청에 따라 get, modify 둘 다 처리 수 있게 설정한다.
+	// void 이기 때문에 요청된 값에 따라 다른 페이지를 보여준다(get.jsp, modify.jsp)
+	@GetMapping({ "/get", "/modify" })
 	public void get(@RequestParam("bno") Long bno, Model model) {
 		
-		log.info("/get");
+		log.info("/get or modify ");
 		model.addAttribute("board", service.get(bno));
 	}
 	
