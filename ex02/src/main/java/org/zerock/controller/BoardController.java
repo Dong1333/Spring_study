@@ -57,8 +57,6 @@ public class BoardController {
 
 	}
 	
-	
-	
 	// 특정한 게시물을 가져오는 메소드
 	// bno 값을 좀 더 명시적으로 처리하는 *@RequestParam을 이용해서 지정
 	// 요청에 따라 get, modify 둘 다 처리 수 있게 설정한다.
