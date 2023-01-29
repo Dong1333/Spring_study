@@ -40,7 +40,7 @@ public class BoardController {
 	
 	@GetMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
-
+ㄴㄴ
 		log.info("register: " + board);
 
 		service.register(board);
