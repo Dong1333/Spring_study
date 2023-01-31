@@ -2,14 +2,17 @@ package org.zerock.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Select;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 // MyBatis는 간단한 SQL을 처리하는데 어노테이션을 사용한다.
 // 하지만 xml을 사용하도록 한다(org.zerock.mapper.BoardMapper.XML)
 public interface BoardMapper {
 	// @Select("select * from tbl_board where bno > 0")
 	public List<BoardVO> getList();
+	
+	// 페이징 처리 
+	public List<BoardVO> getListWithPaging(Criteria cri);
 	
 	// insert만 처리되고 생성된 PK 값을 알 필요가 없는 경우
 	public void insert(BoardVO board);

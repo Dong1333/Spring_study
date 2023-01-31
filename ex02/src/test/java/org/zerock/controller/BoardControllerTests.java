@@ -60,6 +60,22 @@ public class BoardControllerTests {
 				.getModelMap());
 	}
 	
+	// BoardController의 list() 테스트 하는 메소드 
+	// 게시물의 목록을 전달 
+	// MockMvcRequestBuilders라는 존재를 이용해서 GET 방식의 호출
+	@Test
+	public void testListPaging() throws Exception {
+		// BoardController의 getList()에서 반환된 결과를 이용해서
+		// Model에 어떤 데이터 들이 담겨있는지 확인한다.
+		log.info( mockMvc.perform(
+				MockMvcRequestBuilders.get("/board/list")
+				.param("pageNum", "2")
+				.param("amount", "50"))
+				.andReturn()
+				.getModelAndView()
+				.getModelMap());
+	}
+	
 	// BoardController의 register() 테스트 하는 메소드 
 	// 등록 작업이 끝나면 다시 목록화면으로 이동
 	@Test

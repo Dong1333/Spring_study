@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <!--namespace 속성값은 Mapper 인터페이스와 동일한 이름으로 작성.  -->
 <mapper namespace="org.zerock.mapper.BoardMapper">
+
 
 	<sql id="criteria">
 		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
@@ -24,21 +24,21 @@
 			</foreach>
 		</trim>
 	</sql>
-	<!--id 속성값은 메서드의 이름과 일치하게 작성
-		resuletType 속성 값은 select 쿼리의 결과를 특정 클래스의 객체로 만들기 위해 설정 -->
+
+
 	<select id="getList" resultType="org.zerock.domain.BoardVO">
 	<![CDATA[
 		select * from tbl_board where bno > 0 
 		]]>
-	</select> 
-		<!-- create(intsert) 처리 / 생성된 PK 값을 알 필요가 없는 경우 -->
+	</select>
+
 	<insert id="insert">
 		insert into tbl_board (bno,title,content,writer)
 		values (seq_board.nextval, #{title}, #{content}, #{writer})
 	</insert>
-	
-	<!-- create(intsert) 처리 / 생성된 PK 값을 알 필요가 있는 경우 -->
+
 	<insert id="insertSelectKey">
+
 		<selectKey keyProperty="bno" order="BEFORE"
 			resultType="long">
 			select seq_board.nextval from dual
@@ -54,11 +54,11 @@
 		#{bno}
 	</select>
 
-	<!-- PK(bno) 값을 이용한 데이터 삭제 작업-->
+
 	<delete id="delete">
 		delete tbl_board where bno = #{bno}
 	</delete>
-	<!-- PK(bno) 값을 이용한 데이터 업데이트 작업-->
+
 	<update id="update">
 		update tbl_board
 		set title= #{title},
@@ -87,30 +87,9 @@
         rownum rn, bno, title, content, writer, regdate, updatedate 
       from 
         tbl_board
-      where 
-  ]]>
-		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
-			<foreach item='type' collection="typeArr">
-				<trim prefix="OR">
-					<choose>
-						<when test="type == 'T'.toString()">
-							title like '%'||#{keyword}||'%'
-						</when>
-						<when test="type == 'C'.toString()">
-							content like '%'||#{keyword}||'%'
-						</when>
-						<when test="type == 'W'.toString()">
-							writer like '%'||#{keyword}||'%'
-						</when>
-					</choose>
-				</trim>
-			</foreach>
-		</trim>
-      
-  <![CDATA[    
-      rownum <= #{pageNum} * #{amount}
+      where rownum <= #{pageNum} * #{amount}
       )
-  where rn > (#{pageNum} -1) * #{amount}   
+  where rn > (#{pageNum} -1) * #{amount}
   ]]>
 	</select>
 

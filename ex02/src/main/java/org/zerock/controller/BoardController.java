@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 import org.zerock.service.BoardService;
 
 import lombok.AllArgsConstructor;
@@ -29,18 +30,27 @@ public class BoardController {
 	// 즉 service로 BoardService 메소드를 사용할 수 있음
 	private BoardService service;
 	
+//	// 게시물의 목록을 전달해야 하므로 Model을 파리미터로 지정
+//	@GetMapping("/list")
+//	public void list(Model model) {
+//		
+//		// 이를 통해서 BoardServiceImpl 객체의 getList() 결과를 담아 전달한다.
+//		log.info("list");
+//		model.addAttribute("list", service.getList());
+//	}
+	
 	// 게시물의 목록을 전달해야 하므로 Model을 파리미터로 지정
 	@GetMapping("/list")
-	public void list(Model model) {
+	public void list(Criteria cri, Model model) {
 		
 		// 이를 통해서 BoardServiceImpl 객체의 getList() 결과를 담아 전달한다.
-		log.info("list");
-		model.addAttribute("list", service.getList());
+		log.info("list : " + cri);
+		model.addAttribute("list", service.getList(cri));
 	}
+	
 	
 	@GetMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
-ㄴㄴ
 		log.info("register: " + board);
 
 		service.register(board);

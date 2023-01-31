@@ -1,6 +1,7 @@
 package org.zerock.service;
 
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -49,12 +51,15 @@ public class BoardServiceTests {
 		log.info("생성된 게시물의 번호 : " + board.getBno());
 	}
 	
-	//  현재 테이블에 저장된 모든 데이터를 가져오는걸 테스트 하는 코드 
+	//  현재 테이블에 저장된 데이터를 가져오는걸 테스트 하는 코드 
 	// service.getList()에 반환 값을 하나씩 출력 
 	@Test
 	public void testGetList() {
 		// forEach 함수 : list 값을 board에 담아서 log로 출력한다 
-		service.getList().forEach(board -> log.info(board));
+		//service.getList().forEach(board -> log.info(board));
+		
+		// 2페이지에 넣을 10개의 게시글 목록 
+		service.getList(new Criteria(2,10)).forEach(board -> log.info(board));
 	}
 	
 	// bno 번호 기준으로 BoardVO의 인스턴스가 리턴되어 로그로 출력
