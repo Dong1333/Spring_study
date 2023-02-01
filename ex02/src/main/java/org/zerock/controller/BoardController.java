@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.PageDTO;
 import org.zerock.service.BoardService;
 
 import lombok.AllArgsConstructor;
@@ -46,6 +47,8 @@ public class BoardController {
 		// 이를 통해서 BoardServiceImpl 객체의 getList() 결과를 담아 전달한다.
 		log.info("list : " + cri);
 		model.addAttribute("list", service.getList(cri));
+		// PageDTO객체를 넘겨준다(cri와 임의에 전체 게시물 개수(123)을 전달 
+		model.addAttribute("pageMaker", new PageDTO(cri, 123));
 	}
 	
 	
