@@ -29,5 +29,8 @@ public interface BoardMapper {
 	// 업데이트 메소드( 최종 수정시간은 데이터베이스 내 현재 시간)
 	// (in : BoardVO / out : int)
 	public int update(BoardVO board);
+	
+	// 모든 게시물의 개수 조회
+	public int getTotalCount(Criteria cri);
 
 }

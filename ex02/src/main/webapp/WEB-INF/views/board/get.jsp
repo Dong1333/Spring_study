@@ -42,30 +42,31 @@
             value='<c:out value="${board.writer }"/>' readonly="readonly">
         </div>
 
-<%-- 		<button data-oper='modify' class="btn btn-default">
-        <a href="/board/modify?bno=<c:out value="${board.bno}"/>">Modify</a></button>
-        <button data-oper='list' class="btn btn-info">
-        <a href="/board/list">List</a></button> --%>
+    
+    <button data-oper='list' class="btn btn-info"> <a href="/board/list">List</a></button> 
+    <button data-oper='modify' class="btn btn-default"> <a href="/board/modify?bno=<c:out value="${board.bno}"/>">Modify</a></button>
 
-<!-- /board/modify?bno=xx 이동, /board/list 이동 버튼을 추가. -->
-<button data-oper='modify' class="btn btn-default">Modify</button>
-<button data-oper='list' class="btn btn-info">List</button>
 
 <%-- <form id='operForm' action="/boad/modify" method="get">
   <input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno}"/>'>
 </form> --%>
 
+        
+		<!-- // 버튼 클릭시 정상적으로 목록페이지로 이동 -->
+		<form id='operForm' action="/boad/modify" method="get">
+		  <input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno}"/>'>
+		  <input type='hidden' name='pageNum' value='<c:out value="${cri.pageNum}"/>'>
+		  <input type='hidden' name='amount' value='<c:out value="${cri.amount}"/>'> 
+		  
+		 <!-- Criteria의 type과 keyword에 대한 처리 -->
+		  <input type='hidden' name='keyword' value='<c:out value="${cri.keyword}"/>'>
+  		  <input type='hidden' name='type' value='<c:out value="${cri.type}"/>'>
+		</form>
 
-<form id='operForm' action="/boad/modify" method="get">
-  <input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno}"/>'>
-  <input type='hidden' name='pageNum' value='<c:out value="${cri.pageNum}"/>'>
-  <input type='hidden' name='amount' value='<c:out value="${cri.amount}"/>'>
-  <input type='hidden' name='keyword' value='<c:out value="${cri.keyword}"/>'>
-  <input type='hidden' name='type' value='<c:out value="${cri.type}"/>'>  
- 
-</form>
 
-
+<!-- < /board/modify?bno=xx 이동, /board/list 이동 버튼을 추가. 
+<button data-oper='modify' class="btn btn-default">Modify</button>
+<button data-oper='list' class="btn btn-info">List</button> -->
 
       </div>
       <!--  end panel-body -->
@@ -79,18 +80,19 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-  
+
   var operForm = $("#operForm"); 
   
   $("button[data-oper='modify']").on("click", function(e){
-    
-    operForm.attr("action","/board/modify").submit();
+	e.preventDefault();
+    operForm.attr("action","/board/modify");
+    operForm.submit();
     
   });
   
     
   $("button[data-oper='list']").on("click", function(e){
-    
+	e.preventDefault();
     operForm.find("#bno").remove();
     operForm.attr("action","/board/list")
     operForm.submit();

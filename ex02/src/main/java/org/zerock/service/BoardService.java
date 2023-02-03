@@ -17,4 +17,8 @@ public interface BoardService {
 	// 게시글 목록를 구하는 메소드
 	// public List<BoardVO> getList();
 	public List<BoardVO> getList(Criteria cri);
+	
+	// 모든 게시글의 수를 구하는 메소드
+	// BoardMapper의 getTotalCount()를 호출
+	public int getTotal(Criteria cri);
 }

@@ -80,7 +80,13 @@ public class BoardServiceImpl implements BoardService{
 		return mapper.getListWithPaging(cri);
 	}
 	
-	
+	// 테이블에 저장된 데이터 개수를 가져오는 메소드
+	@Override
+	public int getTotal(Criteria cri) {
+		
+		log.info("get total count");
+		return mapper.getTotalCount(cri);
+	}
 
 	
 }

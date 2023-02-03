@@ -105,4 +105,16 @@ public class BoardMapperTests {
 		list.forEach(board -> log.info(board));
 	}
 	
+	// MyBatis 동적 쿼리 테스트 (검색 기능)
+	@Test
+	public void testSearch() {
+		Criteria cri = new Criteria();
+		cri.setKeyword("내용");
+		cri.setType("TCW");
+		 
+		List<BoardVO> list = mapper.getListWithPaging(cri);
+		
+		list.forEach(board -> log.info(board));
+		}
+	
 }
