@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,6 +67,22 @@ public class SampleController {
 			return map;
 		}
 		
-		@GetMapping
+		// ResponseEntity는 데이터와 함께 HTTP 헤더의 상태 메세지 등을 같이 전달하는 용도
+		@GetMapping(value = "/check", params = {"height", "weight"})
+		public ResponseEntity<SampleVO> check(Double height, Double weight){
+			
+			SampleVO vo = new SampleVO(0, "" + height, "" + weight);
+			
+			ResponseEntity<SampleVO> result = null;
+			
+			// heigt값이 150보다 작다면 502(bad gateway) 상태 코드와 데이터를 전송
+			// 그렇지 않으면 200(ok) 코드와 데이터를 전송한다.
+			if (height < 150) {
+				result = ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(vo);
+			} else {
+				result = ResponseEntity.status(HttpStatus.OK).body(vo);
+			}
+			return result;
+		}
 
 }
