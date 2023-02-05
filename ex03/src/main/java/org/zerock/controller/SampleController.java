@@ -10,9 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.domain.SampleVO;
+import org.zerock.domain.Ticket;
 
 import lombok.extern.log4j.Log4j;
 
@@ -83,6 +86,16 @@ public class SampleController {
 				result = ResponseEntity.status(HttpStatus.OK).body(vo);
 			}
 			return result;
+		}
+		
+		// @Requestbody가 말 그대로 요청(request)한 내용(body)을 처리하기 때문에
+		// 일반적인 파라미터 전달방식을 사용할 수 없기 때문에 @PostMapping 사용 
+		@PostMapping("/ticket")
+		public Ticket conver(@RequestBody Ticket ticket) {
+			
+			log.info("conver..........ticket" + ticket);
+			
+			return ticket;
 		}
 
 }
