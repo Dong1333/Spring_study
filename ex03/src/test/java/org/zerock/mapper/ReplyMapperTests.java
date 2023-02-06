@@ -1,5 +1,6 @@
 package org.zerock.mapper;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
@@ -7,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.zerock.domain.Criteria;
 import org.zerock.domain.ReplyVO;
 
 import lombok.Setter;
@@ -40,6 +42,53 @@ public class ReplyMapperTests {
 		});
 		
 	}
+	
+	// 댓글 조회 테스트 
+	@Test
+	public void testRead() {
+		
+		Long targetRno = 5L;
+		
+		ReplyVO vo = mapper.read(targetRno);
+		
+		log.info(vo);
+	}
+		
+	// 댓글 삭제 테스트
+	@Test
+	public void testDelete() {
+		Long targetRno = 1L;
+		
+		mapper.delete(targetRno);
+	}
+	
+	// 댓글 수정 테스트
+	@Test
+	public void testUpdate() {
+		
+		Long targetRno = 10L;
+		
+		ReplyVO vo = mapper.read(targetRno);
+		
+		vo.setReply("update Reply");
+		
+		int count = mapper.update(vo);
+		
+		log.info("UPDATE COUNT " + count);
+		
+	}
+	
+	// 댓글 목록 페이징 테스트
+	@Test
+	public void testList() {
+		Criteria cri = new Criteria();
+		
+		//450L
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, bnoArr[0]);
+		
+		replies.forEach(reply -> log.info(reply));
+	}
+	
 	
 	@Test
 	public void testMapper() {
