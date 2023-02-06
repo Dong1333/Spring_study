@@ -93,7 +93,7 @@ public class SampleController {
 		@PostMapping("/ticket")
 		public Ticket conver(@RequestBody Ticket ticket) {
 			
-			log.info("conver..........ticket" + ticket);
+			log.info("conver..........ticket  " + ticket);
 			
 			return ticket;
 		}
