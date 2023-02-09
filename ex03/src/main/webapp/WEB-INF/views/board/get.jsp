@@ -84,39 +84,34 @@
 
     <!-- /.panel -->
     <div class="panel panel-default">
-<!--   <div class="panel-heading">
+<!--       <div class="panel-heading">
         <i class="fa fa-comments fa-fw"></i> Reply
-      </div>  -->
-  
-   <div class="panel-heading">
+      </div> -->
+      
+      <div class="panel-heading">
         <i class="fa fa-comments fa-fw"></i> Reply
         <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>New Reply</button>
       </div>      
-
+      
       
       <!-- /.panel-heading -->
       <div class="panel-body">        
       
         <ul class="chat">
-		<!-- start reply -->
-		  <li class="left clearfix" data-rno='12'>
-			<div>
-			 <div class = "header">
-				<strong class = "primary-font">user00</strong>
-				<small class ="pull-right text-muted">2018-01-01 13:13</small>
-			 </div>
-			 <p>Good job!</p>
-			</div>
-		  </li>
-		  <!-- end relply -->
+
         </ul>
         <!-- ./ end ul -->
       </div>
       <!-- /.panel .chat-panel -->
-	</div>
+
+	<div class="panel-footer"></div>
+
+
+		</div>
   </div>
   <!-- ./ end row -->
 </div>
+
 
 
 
@@ -179,80 +174,153 @@ var replyUL = $(".chat");
      
  	// 파라미터가 없다면 자동으로 1페이지로 설정
  	// 만일 1페이지가 아닌 경우라면 기존 <ul>에 <li>들이 추가되는 형태
-     replyService.getList({bno:bnoValue,page: page|| 1 }, function(list) {
+ 	 replyService.getList({bno:bnoValue,page: page|| 1 }, function(replyCnt, list) {
+         
+         console.log("replyCnt: "+ replyCnt );
+         console.log("list: " + list);
+         console.log(list);
+         
+         if(page == -1){
+           pageNum = Math.ceil(replyCnt/10.0);
+           showList(pageNum);
+           return;
+         }
+           
+          var str="";
+          
+          if(list == null || list.length == 0){
+            return;
+          }
+          
+          for (var i = 0, len = list.length || 0; i < len; i++) {
+            str +="<li class='left clearfix' data-rno='"+list[i].rno+"'>";
+            str +="  <div><div class='header'><strong class='primary-font'>["
+         	   +list[i].rno+"] "+list[i].replyer+"</strong>"; 
+            str +="    <small class='pull-right text-muted'>"
+                +replyService.displayTime(list[i].replyDate)+"</small></div>";
+            str +="    <p>"+list[i].reply+"</p></div></li>";
+          }
+          
+          replyUL.html(str);
+          
+          showReplyPage(replyCnt);
 
-      var str="";
       
-      if(list == null || list.length == 0){
-        	replyUL.html("");
-    	  return;
-      }
-      
-      // 
-      for (var i = 0, len = list.length || 0; i < len; i++) {
-        str +="<li class='left clearfix' data-rno='"+list[i].rno+"'>";
-       
-        str +="  <div><div class='header'><strong class='primary-font'>[" +list[i].rno+"] "+list[i].replyer+"</strong>"; 
+        });//end function
+          
+      }//end showList
+ 
+	 var pageNum = 1;
+	 var replyPageFooter = $(".panel-footer");
+	 
+	 function showReplyPage(replyCnt){
+	   
+	   var endNum = Math.ceil(pageNum / 10.0) * 10;  
+	   var startNum = endNum - 9; 
+	   
+	   var prev = startNum != 1;
+	   var next = false;
+	   
+	   if(endNum * 10 >= replyCnt){
+	     endNum = Math.ceil(replyCnt/10.0);
+	   }
+	   
+	   if(endNum * 10 < replyCnt){
+	     next = true;
+	   }
+	   
+	   var str = "<ul class='pagination pull-right'>";
+	   
+	   if(prev){
+	     str+= "<li class='page-item'><a class='page-link' href='"+(startNum -1)+"'>Previous</a></li>";
+	   }
+	   
+	    
+	   
+	   for(var i = startNum ; i <= endNum; i++){
+	     
+	     var active = pageNum == i? "active":"";
+	     
+	     str+= "<li class='page-item "+active+" '><a class='page-link' href='"+i+"'>"+i+"</a></li>";
+	   }
+	   
+	   if(next){
+	     str+= "<li class='page-item'><a class='page-link' href='"+(endNum + 1)+"'>Next</a></li>";
+	   }
+	   
+	   str += "</ul></div>";
+	   
+	   console.log(str);
+	   
+	   replyPageFooter.html(str);
+	 }
+  
+	 
+	 /* 마지막 처리는 페이지의 번호를 클릭했을 때 새로운 댓글을 가져오도록 하는 부분 */
+     
+    replyPageFooter.on("click","li a", function(e){
+        e.preventDefault();
+        console.log("page click");
         
-        str +="    <small class='pull-right text-muted'>" +replyService.displayTime(list[i].replyDate)+"</small></div>";
+        var targetPageNum = $(this).attr("href");
         
-        str +="    <p>"+list[i].reply+"</p></div></li>";
-      }
-      
-      replyUL.html(str);
+        console.log("targetPageNum: " + targetPageNum);
         
-    });//end function
- } //end showList
- 
- 
- var modal = $(".modal");
- var modalInputReply = modal.find("input[name='reply']");
- var modalInputReplyer = modal.find("input[name='replyer']");
- var modalInputReplyDate = modal.find("input[name='replyDate']");
- 
- var modalModBtn = $("#modalModBtn");
- var modalRemoveBtn = $("#modalRemoveBtn");
- var modalRegisterBtn = $("#modalRegisterBtn");
- 
- $("#modalCloseBtn").on("click", function(e){
- 	
- 	modal.modal('hide');
- });
- 
- $("#addReplyBtn").on("click", function(e){
-   
-   modal.find("input").val("");
-   modalInputReplyDate.closest("div").hide();
-   modal.find("button[id !='modalCloseBtn']").hide();
-   
-   modalRegisterBtn.show();
-   
-   $(".modal").modal("show");
-   
- });
- 
- 
+        pageNum = targetPageNum;
+        
+        showList(pageNum);
+      });     
 
- modalRegisterBtn.on("click",function(e){
-   
-   var reply = {
-         reply: modalInputReply.val(),
-         replyer:modalInputReplyer.val(),
-         bno:bnoValue
-       };
-   replyService.add(reply, function(result){
-     
-     alert(result);
-     
-     modal.find("input").val("");
-     modal.modal("hide");
-     
-     //showList(1);
-     showList(-1);
-     
-   });
-   
- });
+    
+ 
+	 var modal = $(".modal");
+	 var modalInputReply = modal.find("input[name='reply']");
+	 var modalInputReplyer = modal.find("input[name='replyer']");
+	 var modalInputReplyDate = modal.find("input[name='replyDate']");
+	 
+	 var modalModBtn = $("#modalModBtn");
+	 var modalRemoveBtn = $("#modalRemoveBtn");
+	 var modalRegisterBtn = $("#modalRegisterBtn");
+	 
+	 $("#modalCloseBtn").on("click", function(e){
+	 	
+	 	modal.modal('hide');
+	 });
+	 
+	 $("#addReplyBtn").on("click", function(e){
+	   
+	   modal.find("input").val("");
+	   modalInputReplyDate.closest("div").hide();
+	   modal.find("button[id !='modalCloseBtn']").hide();
+	   
+	   modalRegisterBtn.show();
+	   
+	   $(".modal").modal("show");
+	   
+	 });
+	 
+	 
+	
+	 modalRegisterBtn.on("click",function(e){
+	   
+	   var reply = {
+	         reply: modalInputReply.val(),
+	         replyer:modalInputReplyer.val(),
+	         bno:bnoValue
+	       };
+	   replyService.add(reply, function(result){
+	     
+	     alert(result);
+	     
+	     modal.find("input").val("");
+	     modal.modal("hide");
+	     
+	     //showList(1);
+	     showList(-1);
+	     
+	   });
+	   
+	 });
  
  //댓글 조회 클릭 이벤트 처리 
  // <ul>태그의 클래스 ‘chat’을 이용해서 이벤트를 걸고 실제 이벤트의 대상은 <li> 태그
@@ -274,34 +342,39 @@ var replyUL = $(".chat");
        
        $(".modal").modal("show");
            
-     });
+   	  });
+	});
      
      modalModBtn.on("click", function(e){
-         
-         var reply = {rno:modal.data("rno"), reply: modalInputReply.val()};
-         
-         replyService.update(reply, function(result){
-               
-           alert(result);
-           modal.modal("hide");
-           showList(1);
-           
-         });
-         
-       });
-     
-     modalRemoveBtn.on("click", function (e){
    	  
-     	  var rno = modal.data("rno");
-     	  
-     	  replyService.remove(rno, function(result){
-     	        
-     	      alert(result);
-     	      modal.modal("hide");
-     	      showList(1);
-     	      
-     	  });
-});
+      	  var reply = {rno:modal.data("rno"), reply: modalInputReply.val()};
+      	  
+      	  replyService.update(reply, function(result){
+      	        
+      	    alert(result);
+      	    modal.modal("hide");
+      	    showList(pageNum);
+      	    
+      	  });
+      	  
+      	});
+
+
+      	modalRemoveBtn.on("click", function (e){
+      	  
+      	  var rno = modal.data("rno");
+      	  
+      	  replyService.remove(rno, function(result){
+      	        
+      	      alert(result);
+      	      modal.modal("hide");
+      	      showList(pageNum);
+      	      
+      	  });
+      	  
+      	});
+      
+ });
 /* 	console.log("==========");
 	console.log("JS Test");
 	

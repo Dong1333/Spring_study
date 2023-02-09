@@ -31,16 +31,18 @@ var replyService = (function() {
 		var page = param.page || 1;
 	
 	//  Ajax 호출을 담당하므로, jQuery의 getJSON() 이용해서 처리 가능
-		$.getJSON("/replies/pages/" + bno + "/" + page + ".json",
-				function(data) {
-					if (callback) {
-						callback(data);
-					}
-				}).fail(function(xhr, status, err) {
-			if (error) {
-				error();
-			}
-		});
+		 $.getJSON("/replies/pages/" + bno + "/" + page + ".json",
+	        function(data) {
+	    	
+	          if (callback) {
+	            //callback(data); // 댓글 목록만 가져오는 경우 
+	            callback(data.replyCnt, data.list); //댓글 숫자와 목록을 가져오는 경우 
+	          }
+	        }).fail(function(xhr, status, err) {
+	      if (error) {
+	        error();
+	      }
+	    });
 	}
 	
 	// 댓글 삭제는 DELETE 방식을 통해 해당 URL을 호출
