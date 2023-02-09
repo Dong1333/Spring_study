@@ -2,7 +2,7 @@
   pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@include file=../includes/header.jsp"%>
+<%@include file="../includes/header.jsp"%>
 
 
 <div class="row">
@@ -78,21 +78,302 @@
 </div>
 <!-- /.row -->
 
+<div class='row'>
+
+  <div class="col-lg-12">
+
+    <!-- /.panel -->
+    <div class="panel panel-default">
+<!--   <div class="panel-heading">
+        <i class="fa fa-comments fa-fw"></i> Reply
+      </div>  -->
+  
+   <div class="panel-heading">
+        <i class="fa fa-comments fa-fw"></i> Reply
+        <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>New Reply</button>
+      </div>      
+
+      
+      <!-- /.panel-heading -->
+      <div class="panel-body">        
+      
+        <ul class="chat">
+		<!-- start reply -->
+		  <li class="left clearfix" data-rno='12'>
+			<div>
+			 <div class = "header">
+				<strong class = "primary-font">user00</strong>
+				<small class ="pull-right text-muted">2018-01-01 13:13</small>
+			 </div>
+			 <p>Good job!</p>
+			</div>
+		  </li>
+		  <!-- end relply -->
+        </ul>
+        <!-- ./ end ul -->
+      </div>
+      <!-- /.panel .chat-panel -->
+	</div>
+  </div>
+  <!-- ./ end row -->
+</div>
+
+
+
+<!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"
+                aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">REPLY MODAL</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Reply</label> 
+                <input class="form-control" name='reply' value='New Reply!!!!'>
+              </div>      
+              <div class="form-group">
+                <label>Replyer</label> 
+                <input class="form-control" name='replyer' value='replyer'>
+              </div>
+              <div class="form-group">
+                <label>Reply Date</label> 
+                <input class="form-control" name='replyDate' value='2018-01-01 13:13'>
+              </div>
+      
+            </div>
+<div class="modal-footer">
+        <button id='modalModBtn' type="button" class="btn btn-warning">Modify</button>
+        <button id='modalRemoveBtn' type="button" class="btn btn-danger">Remove</button>
+        <button id='modalRegisterBtn' type="button" class="btn btn-primary">Register</button>
+        <button id='modalCloseBtn' type="button" class="btn btn-default">Close</button>
+      </div>          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+
+
+
+<script type="text/javascript" src="/resources/js/reply.js"> </script>
+
+
+
+<script>
+//게시글의 조회 페이지가 열리면 자동으로 댓글 목록을 가져와서 <li> 태그를 구성
+//이에 대한 처리는 $(document).ready()내에서 이루어 진다.
+$(document).ready(function () {
+
+var bnoValue = '<c:out value="${board.bno}"/>';
+var replyUL = $(".chat");
+
+ showList(1);
+ // show.List()는 페이지 번호를 파라미터로 받도록 설계
+ function showList(page){
+ 	
+ 	console.log("show list " + page);
+     
+ 	// 파라미터가 없다면 자동으로 1페이지로 설정
+ 	// 만일 1페이지가 아닌 경우라면 기존 <ul>에 <li>들이 추가되는 형태
+     replyService.getList({bno:bnoValue,page: page|| 1 }, function(list) {
+
+      var str="";
+      
+      if(list == null || list.length == 0){
+        	replyUL.html("");
+    	  return;
+      }
+      
+      // 
+      for (var i = 0, len = list.length || 0; i < len; i++) {
+        str +="<li class='left clearfix' data-rno='"+list[i].rno+"'>";
+       
+        str +="  <div><div class='header'><strong class='primary-font'>[" +list[i].rno+"] "+list[i].replyer+"</strong>"; 
+        
+        str +="    <small class='pull-right text-muted'>" +replyService.displayTime(list[i].replyDate)+"</small></div>";
+        
+        str +="    <p>"+list[i].reply+"</p></div></li>";
+      }
+      
+      replyUL.html(str);
+        
+    });//end function
+ } //end showList
+ 
+ 
+ var modal = $(".modal");
+ var modalInputReply = modal.find("input[name='reply']");
+ var modalInputReplyer = modal.find("input[name='replyer']");
+ var modalInputReplyDate = modal.find("input[name='replyDate']");
+ 
+ var modalModBtn = $("#modalModBtn");
+ var modalRemoveBtn = $("#modalRemoveBtn");
+ var modalRegisterBtn = $("#modalRegisterBtn");
+ 
+ $("#modalCloseBtn").on("click", function(e){
+ 	
+ 	modal.modal('hide');
+ });
+ 
+ $("#addReplyBtn").on("click", function(e){
+   
+   modal.find("input").val("");
+   modalInputReplyDate.closest("div").hide();
+   modal.find("button[id !='modalCloseBtn']").hide();
+   
+   modalRegisterBtn.show();
+   
+   $(".modal").modal("show");
+   
+ });
+ 
+ 
+
+ modalRegisterBtn.on("click",function(e){
+   
+   var reply = {
+         reply: modalInputReply.val(),
+         replyer:modalInputReplyer.val(),
+         bno:bnoValue
+       };
+   replyService.add(reply, function(result){
+     
+     alert(result);
+     
+     modal.find("input").val("");
+     modal.modal("hide");
+     
+     //showList(1);
+     showList(-1);
+     
+   });
+   
+ });
+ 
+ //댓글 조회 클릭 이벤트 처리 
+ // <ul>태그의 클래스 ‘chat’을 이용해서 이벤트를 걸고 실제 이벤트의 대상은 <li> 태그
+ $(".chat").on("click", "li", function(e){
+   
+     var rno = $(this).data("rno");
+     
+     replyService.get(rno, function(reply){
+     
+       modalInputReply.val(reply.reply);
+       modalInputReplyer.val(reply.replyer);
+       modalInputReplyDate.val(replyService.displayTime( reply.replyDate))
+       .attr("readonly","readonly");
+       modal.data("rno", reply.rno);
+       
+       modal.find("button[id !='modalCloseBtn']").hide();
+       modalModBtn.show();
+       modalRemoveBtn.show();
+       
+       $(".modal").modal("show");
+           
+     });
+     
+     modalModBtn.on("click", function(e){
+         
+         var reply = {rno:modal.data("rno"), reply: modalInputReply.val()};
+         
+         replyService.update(reply, function(result){
+               
+           alert(result);
+           modal.modal("hide");
+           showList(1);
+           
+         });
+         
+       });
+     
+     modalRemoveBtn.on("click", function (e){
+   	  
+     	  var rno = modal.data("rno");
+     	  
+     	  replyService.remove(rno, function(result){
+     	        
+     	      alert(result);
+     	      modal.modal("hide");
+     	      showList(1);
+     	      
+     	  });
+});
+/* 	console.log("==========");
+	console.log("JS Test");
+	
+	var bnoValue = '<c:out value="${board.bno}"/>';
+	
+	// Ajax 호출은 replyService라는 이름의 객체에 감쳐줘 있어 필요한 파라미터들만 전달하는 형태
+	// for replyService add test
+	replyService.add (
+		{reply:"JS TEST", replyer : "tester", bno:bnoValue},
+		function(result){
+			alert("Result : " + result);
+		}
+	); */
+</script>
+
+
+<script type="text/javascript">
+
+//reply List Test
+// 해당 게시물의 모든 댓글을 가져오는지 확인하는 코드
+replyService.getList({bno:bnoValue, page:1}, function(list){
+    
+	  for(var i = 0,  len = list.length||0; i < len; i++ ){
+	    console.log(list[i]);
+	  }
+});
+
+/* // 12번 댓글 삭제 테스트 
+replyService.remove(12, function(count) {
+
+	  console.log(count);
+	
+	  if (count === "success") {
+	    alert("REMOVED");
+	  }
+	},
+	function(err) {
+	  alert('ERROR...');
+});
+
+
+//11번 댓글 수정 
+replyService.update({
+	rno : 15,
+	bno : bnoValue,
+	reply : "Modified Reply...."
+	}, 
+	function(result) {
+		alert("수정 완료...");
+
+});   */
+
+// get.jsp에서는 단순히 댓글의 번호만을 전달
+/* replyService.get(10, function(data) {
+	console.log(data);
+}); */
+</script>
+
 <script type="text/javascript">
 $(document).ready(function() {
-
+  
   var operForm = $("#operForm"); 
   
   $("button[data-oper='modify']").on("click", function(e){
-	e.preventDefault();
-    operForm.attr("action","/board/modify");
-    operForm.submit();
+    
+    operForm.attr("action","/board/modify").submit();
     
   });
   
     
   $("button[data-oper='list']").on("click", function(e){
-	e.preventDefault();
+    
     operForm.find("#bno").remove();
     operForm.attr("action","/board/list")
     operForm.submit();
@@ -102,4 +383,4 @@ $(document).ready(function() {
 </script>
 
 
-<%@includefile="../includes/footer.jsp"%>
+<%@include file="../includes/footer.jsp"%>
