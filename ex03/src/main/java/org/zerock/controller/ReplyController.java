@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 import org.zerock.service.ReplyService;
 
@@ -47,22 +48,38 @@ public class ReplyController {
 		: new ResponseEntity<> (HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	// 특정 게시물의 댓글 목록 확인
-	// ‘/{bno}/{page}’의 ‘page’값은 Criteria를 생성해서 직접 처리해야 한다
-	@GetMapping(value = "/pages/{bno}/{page}",
-				produces = {
-					MediaType.APPLICATION_XML_VALUE,
-					MediaType.APPLICATION_JSON_UTF8_VALUE })
-	// 게시물의 번호는 @PathVariable을 이용해서 파라미터로 처리
-	public ResponseEntity<List<ReplyVO>> getList(
-			@PathVariable("page") int page,
-			@PathVariable("bno") Long bno) {
-		
-		log.info("getList........");
+//	// 특정 게시물의 댓글 목록 확인
+//	// ‘/{bno}/{page}’의 ‘page’값은 Criteria를 생성해서 직접 처리해야 한다
+//	@GetMapping(value = "/pages/{bno}/{page}",
+//				produces = {
+//					MediaType.APPLICATION_XML_VALUE,
+//					MediaType.APPLICATION_JSON_UTF8_VALUE })
+//	// 게시물의 번호는 @PathVariable을 이용해서 파라미터로 처리
+//	public ResponseEntity<List<ReplyVO>> getList(
+//			@PathVariable("page") int page,
+//			@PathVariable("bno") Long bno) {
+//		
+//		log.info("getList........");
+//		Criteria cri = new Criteria(page, 10);
+//		log.info(cri);
+//		return new ResponseEntity<> (service.getList(cri, bno), HttpStatus.OK);
+//	}
+//	
+
+	@GetMapping(value = "/pages/{bno}/{page}", 
+			produces = { MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<ReplyPageDTO> getList(@PathVariable("page") int page, @PathVariable("bno") Long bno) {
+
 		Criteria cri = new Criteria(page, 10);
-		log.info(cri);
-		return new ResponseEntity<> (service.getList(cri, bno), HttpStatus.OK);
+		
+		log.info("get Reply List bno: " + bno);
+
+		log.info("cri:" + cri);
+
+		return new ResponseEntity<>(service.getListPage(cri, bno), HttpStatus.OK);
 	}
+
 	
 	// 댓글 삭제/조회
 	@GetMapping(value = "/{rno}",

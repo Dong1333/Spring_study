@@ -44,4 +44,11 @@
 
 	</select>
 	
+	<!-- 	댓글 숫자 파악 -->
+	<select id="getCountByBno" resultType="int">
+		<![CDATA[
+		select count(rno) from tbl_reply where bno = #{bno}
+		]]>
+	</select>
+	
 </mapper>
